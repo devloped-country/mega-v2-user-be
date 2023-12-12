@@ -38,6 +38,7 @@ public class AuthenticationService{
     private int certificationNumber;
     HashMap<Long, Integer> certification = new HashMap<>();
 
+    //로그인
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         // 인증 시도. 인증에 실패하면 AuthenticationError 반환됨
         authenticationManager.authenticate(
@@ -56,6 +57,7 @@ public class AuthenticationService{
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .isIdentified(user.getIsIdentified())
+                    .id(user.getId())
                     .build();
         }
         // 본인인증이 안된 유저라면 토큰발급안함
@@ -123,6 +125,7 @@ public class AuthenticationService{
     public ResponseEntity certificate(CertificationRequest request) throws CustomException {
         Long userId = request.getId();
         if(certification.get(userId) == request.getCertificationNumber()) {
+            certification.remove(userId);
             return ResponseEntity.status(HttpStatus.OK).body(
                     CommonResponse.builder()
                             .responseCode(1)

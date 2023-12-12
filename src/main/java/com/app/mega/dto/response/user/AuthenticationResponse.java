@@ -10,4 +10,5 @@ public class AuthenticationResponse {
     //로그인 응답 DTO
     private String token;
     private Boolean isIdentified;
+    private Long id;
 }
