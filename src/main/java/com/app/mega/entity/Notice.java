@@ -1,7 +1,11 @@
 package com.app.mega.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +30,7 @@ import jakarta.validation.constraints.NotNull;
 @Data
 @Builder
 @AllArgsConstructor
-@ToString(exclude = {"noticeImgs", "noticeTags", "admin", "course"})
+@ToString(exclude = {"noticeTags", "admin", "course"})
 public class Notice {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,21 +40,23 @@ public class Notice {
   private String title;
 
   @NotNull
-  @Lob
+  @Column(columnDefinition = "LONGTEXT")
   private String content;
 
   @NotNull
   private String author;
 
   @NotNull
+  @Column(columnDefinition = "LONGTEXT")
+  private String textContent;
+
+  @NotNull
   private LocalDateTime createdTime;
 
   private String thumbnail;
 
-  @OneToMany(mappedBy = "notice")
-  private List<NoticeImg> noticeImgs;
-
-  @OneToMany(mappedBy = "notice")
+  @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
+  @JsonManagedReference
   private List<NoticeTag> noticeTags;
 
   @ManyToOne
