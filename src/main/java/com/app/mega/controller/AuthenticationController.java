@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
+    @GetMapping("api/auth/checklogin")
+    public int checklogin() {
+        return 1;
+    }
+
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
