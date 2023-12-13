@@ -85,18 +85,29 @@ public class AuthenticationService{
         if(Objects.equals(identifyMethod, "phone")) {
 
             String mobileNo = "+82"+user.getPhone();
-            String smsTxt = "MEGA 인증메시지입니다. 어플에 인증번호를 입력해주세요.\n인증번호: "+certificationNumber;
+            String smsTxt = "MEGA 인증메시지입니다. \n인증번호: "+certificationNumber;
 
-            SnsSenderDto dto = new SnsSenderDto(mobileNo, smsTxt);
-            snsSender.send(dto);
-            //PublishResult result = snsSender.send(dto);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    CommonResponse.builder()
-                            .responseCode(1)
-                            .responseMessage("[성공] 인증문자 전송 완료")
-                            .data(user.getId())
-                            .build());
+            try {
+                SnsSenderDto dto = new SnsSenderDto(mobileNo, smsTxt);
+                snsSender.send(dto);
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        CommonResponse.builder()
+                                .responseCode(1)
+                                .responseMessage("[성공] 인증문자 전송 완료")
+                                .data(user.getId())
+                                .build());
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        CommonResponse.builder()
+                                .responseCode(-1)
+                                .responseMessage("[실패] 인증문자 전송 실패")
+                                .data(user.getId())
+                                .build());
+            }
         }
+
+
         //인증번호 메일 발송
         if(Objects.equals(identifyMethod, "email")) {
             ArrayList<String> to = new ArrayList<>();
