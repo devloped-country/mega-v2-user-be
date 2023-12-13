@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
-    @GetMapping("api/auth/checklogin")
+    @GetMapping("/checklogin")
     public int checklogin() {
         return 1;
     }
