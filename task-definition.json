@@ -1,5 +1,5 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-3:503237308475:task-definition/bsdev08-taskDefinition-family-user:5",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-3:503237308475:task-definition/bsdev08-taskDefinition-family-user:9",
   "containerDefinitions": [
     {
       "name": "bsdev08-container-user",
@@ -33,7 +33,7 @@
   "taskRoleArn": "arn:aws:iam::503237308475:role/bsdev08-role-for-ECS-task",
   "executionRoleArn": "arn:aws:iam::503237308475:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
-  "revision": 5,
+  "revision": 9,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -79,7 +79,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-11-27T11:05:17.897Z",
+  "registeredAt": "2023-11-27T15:05:59.895Z",
   "registeredBy": "arn:aws:iam::503237308475:user/BSDEV07",
   "tags": [
     {
