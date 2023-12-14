@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Builder
 @AllArgsConstructor
-@ToString(exclude = {"institution", "noteSends", "noteReceives", "userNotifications", "attendances", "appliances"})
+@ToString(exclude = {"institution", "userNotifications", "attendances"})
 public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

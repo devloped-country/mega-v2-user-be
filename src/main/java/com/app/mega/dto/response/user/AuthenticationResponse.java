@@ -11,4 +11,6 @@ public class AuthenticationResponse {
     private String token;
     private Boolean isIdentified;
     private Long id;
+    private String email;
+    private Long courseId;
 }
