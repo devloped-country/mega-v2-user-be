@@ -18,7 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table
 @NoArgsConstructor
 @Data
-@ToString(exclude = {"user", "appliance"})
+@ToString(exclude = {"user"})
 public class Attendance {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

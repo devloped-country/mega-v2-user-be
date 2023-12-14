@@ -1,12 +1,7 @@
 package com.app.mega.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,6 +25,9 @@ public class Institution {
   @NotNull
   private String name;
 
+  @NotNull
+  private String address;
+
   @Column(columnDefinition = "FLOAT(7,5)")
   @ColumnDefault("0")
   private Float latitude;
@@ -45,12 +43,12 @@ public class Institution {
   @Column(columnDefinition = "TINYINT(1)")
   private boolean subscriptionStatus;
 
-  @OneToMany(mappedBy = "institution")
+  @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
   private List<Course> courseList;
 
-  @OneToMany(mappedBy = "institution")
+  @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
   private List<Admin> admin;
 
-  @OneToMany(mappedBy = "institution")
+  @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
   private List<User> user;
 }
