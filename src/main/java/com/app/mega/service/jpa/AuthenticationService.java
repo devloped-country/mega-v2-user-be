@@ -58,6 +58,8 @@ public class AuthenticationService{
                     .token(jwtToken)
                     .isIdentified(user.getIsIdentified())
                     .id(user.getId())
+                    .courseId(user.getCourse().getId())
+                    .email(user.getEmail())
                     .build();
         }
         // 본인인증이 안된 유저라면 토큰발급안함
