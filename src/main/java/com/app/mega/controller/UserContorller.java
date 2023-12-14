@@ -17,6 +17,7 @@ public class UserContorller {
     //User 정보 Read
     @GetMapping("/read")
     public UserResponse readUserInfomation(@AuthenticationPrincipal User user) throws Exception {
+        System.out.println("readUserInfomation");
         return userService.readUserResponse(user);
     }
 
@@ -24,6 +25,14 @@ public class UserContorller {
     //User 정보 Update
     @PutMapping("/update")
     public void updateUserInformation(@AuthenticationPrincipal User user, UserRequest request) throws Exception {
-        userService.updateUserResponse(user,request);
+        userService.updateUserInfo(user,request);
     }
+
+    //User Password Update
+    @PutMapping("/updatePassword")
+    public void updateUserPassword(@AuthenticationPrincipal User user, UserRequest request) throws Exception {
+        userService.isCorrectPassword(user, request);
+        userService.updateUserPassword(user, request);
+    }
+
 }

@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
-    private Long courseId;
-    private Long institutionId;
+    private String courseName;
+    private String institutionName;
 
+    private Long id;
     private String name;
     private String email;
     private String phone;
