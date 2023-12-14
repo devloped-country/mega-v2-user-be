@@ -25,12 +25,15 @@ public class NoteController {
     //교육기관에 해당하는 매니저 불러오기 (쪽지쓰기 선택시)
     @GetMapping("/receivers")
     public List<ReceiverResponse> readReceiver (@AuthenticationPrincipal User user) {
+        System.out.println("readReceiver");
         return noteService.readReceiver(user.getInstitution());
     }
 
     //발신시 쪽지 저장
     @PostMapping("/register")
     public void registerNote (@RequestBody NoteSendRequest request, @AuthenticationPrincipal User user) throws Exception {
+        System.out.println("registerNote");
+        System.out.println(request);
         noteService.registerNote(request, user);
     }
 
@@ -45,6 +48,7 @@ public class NoteController {
     public List<SendedNoteResponse> readNoteSend(@AuthenticationPrincipal User user) {
         return noteService.readNoteSend(user);
     }
+
 
     //휴지통 불러오기
     @GetMapping("/trash")

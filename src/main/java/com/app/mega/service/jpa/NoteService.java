@@ -10,6 +10,7 @@ import com.app.mega.entity.*;
 import com.app.mega.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,23 +23,27 @@ public class NoteService {
     private final NoteReceiveRepository noteReceiveRepository;
     private final AdminRepository adminRepository;
 
-
+    @Transactional
     //교육기관에 해당하는 매니저 불러오기
     public List<ReceiverResponse> readReceiver (Institution institution) {
         //List<User> receivers = courseRepository.findById(courseId).get().getUsers();
         List<Admin> receivers = institution.getAdmin();
         List<ReceiverResponse> receiversInfo = new ArrayList<>();
         for(Admin receiver:receivers) {
-            ReceiverResponse receiverResponse = ReceiverResponse.builder()
-                    .id(receiver.getId())
-                    .name(receiver.getName())
-                    .email(receiver.getEmail())
-                    .build();
-            receiversInfo.add(receiverResponse);
+            if(Boolean.TRUE.equals(receiver.getIsManager())) {
+                ReceiverResponse receiverResponse = ReceiverResponse.builder()
+                        .id(receiver.getId())
+                        .name(receiver.getName())
+                        .email(receiver.getEmail())
+                        .build();
+                receiversInfo.add(receiverResponse);
+            }
         }
+        System.out.println(receiversInfo);
         return receiversInfo;
     }
 
+    @Transactional
     //쪽지 저장 (발신)
     public void registerNote(NoteSendRequest request, User user) {
         System.out.println("registerNote");
@@ -71,6 +76,7 @@ public class NoteService {
         }
     }
 
+    @Transactional
     //발신쪽지 불러오기
     public List<SendedNoteResponse> readNoteSend(User user) {
         List<NoteSend> sentNotes = noteSendRepository.findAllByIsRealDeletedAndUser(false, user);
@@ -94,6 +100,7 @@ public class NoteService {
         return notesInfo;
     }
 
+    @Transactional
     //수신쪽지 불러오기
     public List<ReceivedNoteResponse> readNoteReceive(User user) {
         System.out.println("NoteService.readNoteReceive");
@@ -114,6 +121,7 @@ public class NoteService {
         return notesInfo;
     }
 
+    @Transactional
     //휴지통 불러오기 (수신)
     public List<TrashNoteResponse> readTrashNote(User user) {
         List<NoteReceive> trashNotes = noteReceiveRepository.findAllByIsDeletedAndIsRealDeletedAndUser(true, false, user);
@@ -131,6 +139,7 @@ public class NoteService {
         return notesInfo;
     }
 
+    @Transactional
     //수신쪽지 삭제 (휴지통 넣기)
     public List<ReceivedNoteResponse> deleteReceivedNotes (List<Long> noteIdsForDelete, User user) {
         for(Long noteId : noteIdsForDelete) {
@@ -141,6 +150,7 @@ public class NoteService {
         return readNoteReceive(user);
     }
 
+    @Transactional
     //수신쪽지 완전삭제
     public List<TrashNoteResponse> realDeleteReceivedNotes (List<Long> noteIdsForDelete, User user) {
         for(Long noteId : noteIdsForDelete) {
@@ -151,6 +161,7 @@ public class NoteService {
         return readTrashNote(user);
     }
 
+    @Transactional
     //발신쪽지 완전삭제
     public List<SendedNoteResponse> realDeleteSendedNotes (List<Long> noteIdsForDelete, User user) {
         for(Long noteId : noteIdsForDelete) {
