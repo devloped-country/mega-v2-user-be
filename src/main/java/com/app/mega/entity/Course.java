@@ -13,6 +13,7 @@ import lombok.ToString;
 @Table
 @NoArgsConstructor
 @Data
+
 @ToString(exclude = {"notices", "institution"})
 public class Course {
   @Id
@@ -22,7 +23,7 @@ public class Course {
   @NotNull
   private String name;
 
-  @OneToMany(mappedBy = "course")
+  @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
   private List<Curriculum> curriculumList;
 
   @OneToMany(mappedBy = "course")
