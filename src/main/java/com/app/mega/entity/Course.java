@@ -13,7 +13,7 @@ import lombok.ToString;
 @Table
 @NoArgsConstructor
 @Data
-@ToString(exclude = {"curriculum", "notices", "institution"})
+@ToString(exclude = {"curriculumList", "notices", "institution"})
 public class Course {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Course {
   @NotNull
   private String name;
 
-  @OneToMany(mappedBy = "course")
+  @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
   private List<Curriculum> curriculumList;
 
   @OneToMany(mappedBy = "course")

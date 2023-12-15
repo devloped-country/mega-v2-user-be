@@ -1,5 +1,6 @@
 package com.app.mega.service.jpa;
 
+import com.app.mega.dto.request.user.PasswordRequest;
 import com.app.mega.dto.request.user.UserRequest;
 import com.app.mega.dto.response.user.UserResponse;
 import com.app.mega.entity.User;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,20 +39,24 @@ public class UserService {
     //User정보 수정
     @Transactional
     public void updateUserInfo(User user, UserRequest request) throws Exception {
-        //데이터 수정
-        userMapper.updateUser(request.getName(), request.getPassword(), user.getId());
+
         System.out.println("user = " + user);
         System.out.println("request = " + request);
+        //데이터 수정
+        userMapper.updateUser(request.getName(), request.getPhone(), user.getId());
+
     }
 
     //User password 수정
-    public void updateUserPassword(User user, UserRequest request) throws Exception {
-        userMapper.updatePassword(request.getPassword(), user.getId());
+    @Transactional
+    public void updateUserPassword(User user, PasswordRequest request) throws Exception {
+        userMapper.updatePassword(passwordEncoder.encode(request.getEditPassword()), user.getId());
     }
 
     //기존 password 확인
-    public boolean isCorrectPassword(User user, UserRequest request) throws Exception {
-        return passwordEncoder.encode(request.getPassword()) == passwordEncoder.encode(user.getPassword());
+    @Transactional
+    public boolean isCorrectPassword(User user, PasswordRequest request) throws Exception {
+        return Objects.equals(passwordEncoder.encode(request.getExistedPassword()), user.getPassword());
     }
 
 }
