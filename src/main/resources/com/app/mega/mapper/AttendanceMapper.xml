@@ -9,7 +9,7 @@
 
 
     <select id="getAppliancesById" resultType="com.app.mega.dto.response.appliance.ApplianceResponse" parameterType="long">
-        SELECT status,attendance_id,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time, user_id, reason
+        SELECT status,attendance_id,`time`, user_id, reason, status_change_allow
         FROM appliance
         WHERE user_id = #{id}
     </select>
@@ -20,9 +20,12 @@
         WHERE user_id = #{id} AND DATE(attendance_date) = #{date}
     </select>
 
+<!--    <insert id="createApplianceForAttendance" useGeneratedKeys="false">-->
+<!--        INSERT INTO appliance (user_id,reason,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time,status,attendance_id)-->
+<!--        VALUES (#{id},#{applianceRequest.reason},#{applianceRequest.applianceDate},#{applianceRequest.status},#{attendanceId})-->
+<!--    </insert>-->
     <insert id="createApplianceForAttendance" useGeneratedKeys="false">
-        INSERT INTO appliance (user_id,reason,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time,status,attendance_id)
-        VALUES (#{id},#{applianceRequest.reason},#{applianceRequest.applianceDate},#{applianceRequest.status},#{attendanceId})
+        INSERT INTO appliance (user_id, reason, time, status, attendance_id)
+        VALUES (#{id}, #{applianceRequest.reason}, #{applianceRequest.applianceDate}, #{applianceRequest.status}, #{attendanceId})
     </insert>
-
 </mapper>
