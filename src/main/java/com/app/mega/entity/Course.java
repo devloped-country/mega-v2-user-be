@@ -13,7 +13,8 @@ import lombok.ToString;
 @Table
 @NoArgsConstructor
 @Data
-@ToString(exclude = {"curriculumList", "notices", "institution"})
+
+@ToString(exclude = {"notices", "institution"})
 public class Course {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

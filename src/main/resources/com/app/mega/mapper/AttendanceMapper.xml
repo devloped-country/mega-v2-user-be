@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.mega.mapper.AttendanceMapper">
+
+
+
+
+
+    <select id="getAppliancesById" resultType="com.app.mega.dto.response.appliance.ApplianceResponse" parameterType="long">
+        SELECT status,attendance_id,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time, user_id, reason
+        FROM appliance
+        WHERE user_id = #{id}
+    </select>
+
+    <select id="getAttendanceId" resultType="java.lang.Long" parameterType="map">
+        SELECT id
+        FROM attendance
+        WHERE user_id = #{id} AND DATE(attendance_date) = #{date}
+    </select>
+
+    <insert id="createApplianceForAttendance" useGeneratedKeys="false">
+        INSERT INTO appliance (user_id,reason,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time,status,attendance_id)
+        VALUES (#{id},#{applianceRequest.reason},#{applianceRequest.applianceDate},#{applianceRequest.status},#{attendanceId})
+    </insert>
+
+</mapper>

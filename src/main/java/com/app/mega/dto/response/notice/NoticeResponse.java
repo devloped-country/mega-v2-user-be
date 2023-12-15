@@ -31,7 +31,7 @@ public class NoticeResponse {
     this.author = notice.getAuthor();
     this.tags = notice.getNoticeTags().stream().map(NoticeTagResponse::new).collect(Collectors.toList());
     this.createdTime = notice.getCreatedTime();
-    this.textContent = notice.getTextContent();
+    this.textContent = notice.getContent();
     this.thumbnail = notice.getThumbnail();
   }
 }
