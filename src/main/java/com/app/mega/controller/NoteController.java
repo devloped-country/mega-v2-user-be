@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/note")
@@ -74,7 +74,7 @@ public class NoteController {
         return noteService.realDeleteSendedNotes(request.getSelectedNoteId(), user);
     }
 
-    @GetMapping("/api/note/${id}")
+    @GetMapping("/{id}")
     public NoteResponse readNote (@PathVariable Long id, @AuthenticationPrincipal User user) {
         return noteService.readNote(id, user);
     }
