@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -32,11 +33,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.
                 authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/login", "/api/auth/identify/check","/api/auth/identify/certificate"
-//                            ,"/api/auth/reset_password","/health").permitAll()
-                        .requestMatchers("/api/**", "/health").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/identify/check","/api/auth/identify/certificate"
+                            ,"/api/auth/reset_password","/health").permitAll()
+                        //.requestMatchers("/api/**", "/health").permitAll()
                         .anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 인증 공급자 추가
@@ -47,19 +48,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
-        config.addAllowedOrigin("http://localhost:3002");
-        config.addAllowedOrigin("https://user.megamega-app.com");
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3002", "https://user.megamega-app.com"));
         config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
         config.addAllowedHeader("*"); // 모든 헤더 허용
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
-        config.setAllowedOrigins(Arrays.asList("http://localhost:3002", "https://user.megamega-app.com"));
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
     }
 }
