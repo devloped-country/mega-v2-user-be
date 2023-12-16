@@ -5,7 +5,32 @@
 <mapper namespace="com.app.mega.mapper.AttendanceMapper">
 
 
+    <select id="getAttendanceListByUserIdAndMonth" resultType="com.app.mega.dto.response.AttendanceResponse">
+        SELECT
+            id,
+            DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s') AS start_time,
+            DATE_FORMAT(end_time, '%Y-%m-%d %H:%i:%s') AS end_time,
+            status,
+            DATE_FORMAT(attendance_date, '%Y-%m-%d') AS attendance_date
+        FROM attendance
+        WHERE user_id = #{userId}
+                  AND MONTH(attendance_date) = #{month}
+    </select>
 
+<!--    <select id="getUserListById" resultType="com.app.mega.dto.response.UserResponse">-->
+<!--        SELECT id, name, email, password, phone, is_identified FROM user WHERE id = #{id}-->
+<!--    </select>-->
+
+    <select id="getAttendanceListByUserId" resultType="com.app.mega.dto.response.AttendanceResponse">
+        SELECT
+            id
+             ,DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s')
+             ,DATE_FORMAT(end_time, '%Y-%m-%d %H:%i:%s')
+             ,status
+             ,DATE_FORMAT(attendance_date, '%Y-%m-%d')
+        FROM attendance
+        WHERE user_id = #{userId}
+    </select>
 
 
     <select id="getAppliancesById" resultType="com.app.mega.dto.response.appliance.ApplianceResponse" parameterType="long">
