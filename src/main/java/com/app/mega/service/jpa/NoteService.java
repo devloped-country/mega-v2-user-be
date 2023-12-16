@@ -2,18 +2,19 @@ package com.app.mega.service.jpa;
 
 
 import com.app.mega.dto.request.note.NoteSendRequest;
-import com.app.mega.dto.response.note.ReceivedNoteResponse;
-import com.app.mega.dto.response.note.ReceiverResponse;
-import com.app.mega.dto.response.note.SendedNoteResponse;
-import com.app.mega.dto.response.note.TrashNoteResponse;
+import com.app.mega.dto.response.note.*;
 import com.app.mega.entity.*;
 import com.app.mega.repository.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -22,6 +23,7 @@ public class NoteService {
     private final NoteSendRepository noteSendRepository;
     private final NoteReceiveRepository noteReceiveRepository;
     private final AdminRepository adminRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
     //교육기관에 해당하는 매니저 불러오기
@@ -44,8 +46,8 @@ public class NoteService {
     }
 
     @Transactional
-    //쪽지 저장 (발신)
-    public void registerNote(NoteSendRequest request, User user) {
+    //쪽지 저장 (발신) + 웹소켓 메시지 발송
+    public void registerNote(NoteSendRequest request, User user) throws JsonProcessingException {
         System.out.println("registerNote");
 
         String title = request.getTitle();
@@ -63,6 +65,7 @@ public class NoteService {
                 .content(content)
                 .createTime(LocalDateTime.now())
                 .user(user)
+                .isRealDeleted(false)
                 .build();
         noteSendRepository.save(noteSend);
 
@@ -71,9 +74,25 @@ public class NoteService {
             NoteReceive noteReceive = NoteReceive.builder()
                     .noteSend(noteSend)
                     .admin(receiver)
+                    .isRealDeleted(false)
+                    .isDeleted(false)
+                    .isRead(false)
                     .build();
             noteReceiveRepository.save(noteReceive);
         }
+        WebsocketNoteResponse websocketNoteResponse = WebsocketNoteResponse.builder()
+                .action("sendToManager")
+                .type("note")
+                .title(title)
+                .content(content)
+                .from(user.getName())
+                .to(request.getTo())
+                .noteSendId(noteSend.getId())
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(objectMapper.writeValueAsString(websocketNoteResponse));
+        messagingTemplate.convertAndSend("/topic", objectMapper.writeValueAsString(websocketNoteResponse));
     }
 
     @Transactional
@@ -97,6 +116,7 @@ public class NoteService {
                     .build();
             notesInfo.add(sentNoteResponse);
         }
+        notesInfo.sort(Comparator.comparing(SendedNoteResponse::getTime).reversed());
         return notesInfo;
     }
 
@@ -118,6 +138,7 @@ public class NoteService {
                     .build();
             notesInfo.add(receivedNoteResponse);
         }
+        notesInfo.sort(Comparator.comparing(ReceivedNoteResponse::getTime).reversed());
         return notesInfo;
     }
 
@@ -170,5 +191,17 @@ public class NoteService {
             noteSendRepository.save(noteSend);
         }
         return readNoteSend(user);
+    }
+
+    public NoteResponse readNote(Long id, User user) {
+        NoteSend note = noteSendRepository.findById(id).get();
+
+        return NoteResponse.builder()
+                .title(note.getTitle())
+                .content(note.getContent())
+                .from(note.getAdmin().getName())
+                .time(String.valueOf(note.getCreateTime()))
+                .to(user.getName())
+                .build();
     }
 }
