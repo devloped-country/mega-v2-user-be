@@ -46,8 +46,8 @@ public class NoteService {
     }
 
     @Transactional
-    //쪽지 저장 (발신) + 웹소켓 메시지 발송
-    public void registerNote(NoteSendRequest request, User user) throws JsonProcessingException {
+    //쪽지 저장 (발신)
+    public AfterNoteSendResponse registerNote(NoteSendRequest request, User user) throws JsonProcessingException {
         System.out.println("registerNote");
 
         String title = request.getTitle();
@@ -80,19 +80,7 @@ public class NoteService {
                     .build();
             noteReceiveRepository.save(noteReceive);
         }
-        WebsocketNoteResponse websocketNoteResponse = WebsocketNoteResponse.builder()
-                .action("sendToManager")
-                .type("note")
-                .title(title)
-                .content(content)
-                .from(user.getName())
-                .to(request.getTo())
-                .noteSendId(noteSend.getId())
-                .build();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(objectMapper.writeValueAsString(websocketNoteResponse));
-        messagingTemplate.convertAndSend("/topic", objectMapper.writeValueAsString(websocketNoteResponse));
+        return AfterNoteSendResponse.builder().myName(user.getName()).noteSendId(noteSend.getId()).build();
     }
 
     @Transactional
@@ -129,7 +117,7 @@ public class NoteService {
         for(NoteReceive receivedNote:receivedNotes) {
             NoteSend note = receivedNote.getNoteSend();
             ReceivedNoteResponse receivedNoteResponse = ReceivedNoteResponse.builder()
-                    .id(receivedNote.getId())
+                    .id(receivedNote.getNoteSend().getId())
                     .title(note.getTitle())
                     .content(note.getContent())
                     .isRead(receivedNote.getIsRead())
@@ -194,14 +182,15 @@ public class NoteService {
     }
 
     public NoteResponse readNote(Long id, User user) {
-        NoteSend note = noteSendRepository.findById(id).get();
-
+        NoteSend noteSend = noteSendRepository.findById(id).get();
+        NoteReceive noteReceive = noteReceiveRepository.findByUserAndNoteSend(user, noteSend);
+        noteReceive.setIsRead(true);
+        noteReceiveRepository.save(noteReceive);
         return NoteResponse.builder()
-                .title(note.getTitle())
-                .content(note.getContent())
-                .from(note.getAdmin().getName())
-                .time(String.valueOf(note.getCreateTime()))
+                .content(noteSend.getContent())
+                .from(noteSend.getAdmin().getName())
                 .to(user.getName())
+                .time(String.valueOf(noteSend.getCreateTime()))
                 .build();
     }
 }

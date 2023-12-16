@@ -14,4 +14,6 @@ public interface NoteReceiveRepository  extends JpaRepository<NoteReceive, Long>
     List<NoteReceive> findAllByIsDeletedAndUser(Boolean isDeleted, User user);
     List<NoteReceive> findAllByNoteSend(NoteSend noteSend);
     //List<NoteReceive> findAllByIsDeletedAndUser(Boolean isRealDeleted);
+
+    NoteReceive findByUserAndNoteSend(User user, NoteSend noteSend);
 }
