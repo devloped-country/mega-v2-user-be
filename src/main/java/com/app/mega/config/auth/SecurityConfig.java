@@ -36,7 +36,7 @@ public class SecurityConfig {
 //                            ,"/api/auth/reset_password","/health").permitAll()
                         .requestMatchers("/api/**", "/health").permitAll()
                         .anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 인증 공급자 추가
@@ -63,4 +63,3 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 }
-
