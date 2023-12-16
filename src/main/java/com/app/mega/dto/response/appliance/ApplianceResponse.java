@@ -15,4 +15,5 @@ public class ApplianceResponse {
     private LocalDateTime time;//dto
     private Long userId;
     private String reason;
+    private Integer statusChangeAllow;
 }
