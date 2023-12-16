@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
+  @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class NoticeResponse {

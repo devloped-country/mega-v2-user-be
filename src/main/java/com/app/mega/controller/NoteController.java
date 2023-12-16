@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/note")
@@ -74,7 +73,7 @@ public class NoteController {
         return noteService.realDeleteSendedNotes(request.getSelectedNoteId(), user);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/note/${id}")
     public NoteResponse readNote (@PathVariable Long id, @AuthenticationPrincipal User user) {
         return noteService.readNote(id, user);
     }

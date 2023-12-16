@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
+//@CrossOrigin(origins = "*")
 @Slf4j
 @Getter
 @Setter
@@ -43,10 +43,9 @@ public class AttendanceController {
     @GetMapping("/getAppliancesById")
     public List<ApplianceResponse> getAppliancesById(@AuthenticationPrincipal User user) {
 
-        //public List<ApplianceResponse> getAppliancesById(@PathVariable("id") Long id) {
+//        public List<ApplianceResponse> getAppliancesById(@PathVariable("id") Long id) {
         //return AttendanceRepository.findById(id).orElse(null);
         //return (List<ApplianceResponse>) attendanceService.getAppliancesById(id);
-
         return attendanceService.getAppliancesById(user.getId());
     }
     @PostMapping("/appliance")
