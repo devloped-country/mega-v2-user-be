@@ -2,7 +2,12 @@ package com.app.mega.controller;
 
 
 import com.app.mega.dto.request.appliance.ApplianceRequest;
+import com.app.mega.dto.response.AttendanceListAndTotal;
+import com.app.mega.dto.response.AttendanceProfileSum;
+import com.app.mega.dto.response.AttendanceResponse;
+import com.app.mega.dto.response.AttendanceSum;
 import com.app.mega.dto.response.appliance.ApplianceResponse;
+import com.app.mega.dto.response.user.UserResponse;
 import com.app.mega.entity.Attendance;
 //import com.app.mega.repository.AttendanceRepository;
 import com.app.mega.entity.User;
@@ -20,7 +25,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,4 +70,57 @@ public class AttendanceController {
         attendanceService.createApplianceForAttendance(user.getId(), applianceRequest, attendanceId);
 
     }
+
+    @GetMapping("/AttendancetTotal")
+    public AttendanceListAndTotal TotalById(@AuthenticationPrincipal User user) {
+//        List<UserResponse> userList = attendanceService.getUserListById(user.getId());
+
+
+            AttendanceListAndTotal attendanceListAndTotal = new AttendanceListAndTotal();
+//            profileSum.setUserResponse(userResponse);
+
+            // Get the current month
+            int currentMonth = LocalDate.now().getMonthValue();
+                //여기를 현제말고 프론트에 받아온걸로 달을 주자!!!!!!!!!
+
+            List<AttendanceResponse> attendanceList = attendanceService.getAttendanceListByUserIdAndMonth(user.getId(), currentMonth);
+            attendanceListAndTotal.setAttendanceResponse(attendanceList);
+
+            AttendanceSum attendanceSum = attendanceService.calculateAttendanceSum(user.getId());
+            attendanceListAndTotal.setAttendanceSum(attendanceSum);
+
+            Map<Integer, Long> statusCountMap = attendanceList.stream()
+                    .collect(Collectors.groupingBy(AttendanceResponse::getStatus, Collectors.counting()));
+
+        return attendanceListAndTotal; ///이것만 좀 해결하고
+    }
+
+//    @GetMapping("/{id}/AttendancetTotal")
+//    public List<AttendanceProfileSum> TotalById(@AuthenticationPrincipal User user) {
+//        List<UserResponse> userList = attendanceService.getUserListById(user.getId());
+//
+//        List<AttendanceProfileSum> profileSumList = new ArrayList<>();
+//        for (UserResponse userResponse : userList) {
+//            AttendanceProfileSum profileSum = new AttendanceProfileSum();
+//            profileSum.setUserResponse(userResponse);
+//
+//            // Get the current month
+//            int currentMonth = LocalDate.now().getMonthValue();
+//
+//            List<AttendanceResponse> attendanceList = attendanceService.getAttendanceListByUserIdAndMonth(userResponse.getId(), currentMonth);
+//            profileSum.setAttendanceResponse(attendanceList);
+//
+//            AttendanceSum attendanceSum = attendanceService.calculateAttendanceSum(userResponse.getId());
+//            profileSum.setAttendanceSum(attendanceSum);
+//
+//            Map<Integer, Long> statusCountMap = attendanceList.stream()
+//                    .collect(Collectors.groupingBy(AttendanceResponse::getStatus, Collectors.counting()));
+//
+//            profileSum.setStatusCountMap(statusCountMap);
+//
+//            profileSumList.add(profileSum);
+//        }
+//
+//        return profileSumList;
+//    }
 }
