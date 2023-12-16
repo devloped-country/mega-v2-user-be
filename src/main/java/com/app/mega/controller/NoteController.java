@@ -3,10 +3,7 @@ package com.app.mega.controller;
 import com.app.mega.dto.request.note.NoteIdRequest;
 import com.app.mega.dto.request.note.NoteSendRequest;
 import com.app.mega.dto.request.note.ReceiverRequest;
-import com.app.mega.dto.response.note.ReceivedNoteResponse;
-import com.app.mega.dto.response.note.ReceiverResponse;
-import com.app.mega.dto.response.note.SendedNoteResponse;
-import com.app.mega.dto.response.note.TrashNoteResponse;
+import com.app.mega.dto.response.note.*;
 import com.app.mega.entity.Admin;
 import com.app.mega.entity.User;
 import com.app.mega.service.jpa.NoteService;
@@ -16,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/note")
@@ -73,5 +72,10 @@ public class NoteController {
     @PutMapping("/real_delete_sent")
     public List<SendedNoteResponse> realDeleteSendedNotes (@RequestBody NoteIdRequest request, @AuthenticationPrincipal User user) {
         return noteService.realDeleteSendedNotes(request.getSelectedNoteId(), user);
+    }
+
+    @GetMapping("/api/note/${id}")
+    public NoteResponse readNote (@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return noteService.readNote(id, user);
     }
 }

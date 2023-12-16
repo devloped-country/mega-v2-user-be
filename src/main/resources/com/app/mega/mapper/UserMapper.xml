@@ -13,10 +13,10 @@
     INSERT INTO user (email, pw, name) VALUES (#{email}, #{pw}, #{name})
   </insert>
   <update id="updateUser">
-    UPDATE user SET email = #{userRequest.email}, name = #{userRequest.name} WHERE id = #{id}
+    UPDATE user SET phone = #{phone}, name = #{name} WHERE id = #{id}
   </update>
   <update id="updatePassword">
-    UPDATE user SET password = #{userRequest.password} WHERE id = #{id}
+    UPDATE user SET password = #{password} WHERE id = #{id}
   </update>
   <delete id="deleteUser">
     DELETE FROM user WHERE id = #{id}
