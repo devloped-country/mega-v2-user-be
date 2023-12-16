@@ -10,12 +10,12 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @ToString(exclude = "curriculum")

@@ -1,6 +1,7 @@
 package com.app.mega.config.auth;
 
 import com.app.mega.filter.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,9 +52,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(Arrays.asList(
-                "https://user.megamega-app.com",
-                "http://user.megamega-app.com",
-                "http://localhost:3002"));
+            "https://user.megamega-app.com",
+            "http://user.megamega-app.com",
+            "http://localhost:3002"));
         config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
         config.addAllowedHeader("*"); // 모든 헤더 허용
         config.setAllowCredentials(true);

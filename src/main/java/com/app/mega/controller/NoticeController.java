@@ -4,19 +4,22 @@ import com.app.mega.common.CommonResponse;
 import com.app.mega.common.handler.CustomValidationApiException;
 import com.app.mega.dto.request.notice.NoticeRequest;
 import com.app.mega.dto.response.notice.NoticeResponse;
+import com.app.mega.entity.User;
 import com.app.mega.service.jpa.NoticeService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/notice")
 public class NoticeController {
@@ -25,6 +28,15 @@ public class NoticeController {
 
   public NoticeController(NoticeService noticeService) {
     this.noticeService = noticeService;
+  }
+
+  @GetMapping("/notices")
+  public ResponseEntity<CommonResponse<List<NoticeResponse>>> findNotices(@AuthenticationPrincipal User user) {
+    List<NoticeResponse> notices = noticeService.findNotices(user);
+
+    return ResponseEntity.status(HttpStatus.OK).body(
+        CommonResponse.<List<NoticeResponse>>builder().responseCode(1).responseMessage("성공")
+            .data(notices).build());
   }
 
   @GetMapping
