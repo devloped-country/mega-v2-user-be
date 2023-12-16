@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -23,7 +24,6 @@ public class UserContorller {
         System.out.println("readUserInfomation");
         return userService.readUserResponse(user);
     }
-
 
     //User 정보 Update
     @PutMapping("/update")
