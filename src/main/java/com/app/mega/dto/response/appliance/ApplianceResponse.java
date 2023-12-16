@@ -16,8 +16,3 @@ public class ApplianceResponse {
     private Long userId;
     private String reason;
 }
-//    private String reason;
-//    private LocalDate applianceDate= LocalDate.now();//dto
-//    //    private Attendance attendanceId;
-////    private User userId;
-//    private Integer status;
