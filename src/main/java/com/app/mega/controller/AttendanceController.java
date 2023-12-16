@@ -1,7 +1,6 @@
 package com.app.mega.controller;
 
 
-//import com.app.mega.dto.response.*;
 import com.app.mega.dto.request.appliance.ApplianceRequest;
 import com.app.mega.dto.response.appliance.ApplianceResponse;
 import com.app.mega.entity.Attendance;
@@ -25,7 +24,6 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-@CrossOrigin(origins = "http://localhost:3000")
 
 
 @Slf4j
