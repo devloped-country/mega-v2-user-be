@@ -63,7 +63,7 @@ public class UserService {
     //기존 password 확인
     @Transactional
     public boolean isCorrectPassword(User user, PasswordRequest request){
-        return Objects.equals(passwordEncoder.encode(request.getExistedPassword()), user.getPassword());
+        return passwordEncoder.matches(request.getExistedPassword(), user.getPassword());
     }
 
 }

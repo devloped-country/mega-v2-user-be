@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -186,14 +187,29 @@ public class NoteService {
     public NoteResponse readNote(Long id, User user) {
         NoteSend noteSend = noteSendRepository.findById(id).get();
         NoteReceive noteReceive = noteReceiveRepository.findByUserAndNoteSend(user, noteSend);
-        noteReceive.setIsRead(true);
-        noteReceiveRepository.save(noteReceive);
-        return NoteResponse.builder()
-                .content(noteSend.getContent())
-                .from(noteSend.getAdmin().getName())
-                .to(user.getName())
-                .title(noteSend.getTitle())
-                .time(String.valueOf(noteSend.getCreateTime()))
-                .build();
+        if(noteReceive != null) {
+            noteReceive.setIsRead(true);
+            noteReceiveRepository.save(noteReceive);
+            return NoteResponse.builder()
+                    .content(noteSend.getContent())
+                    .from(noteSend.getAdmin().getName())
+                    .to(Arrays.asList(user.getName()))
+                    .title(noteSend.getTitle())
+                    .time(String.valueOf(noteSend.getCreateTime()))
+                    .build();
+        }else {
+            //발신쪽지확인
+            List<String> to = new ArrayList<>();
+            for(NoteReceive note:noteSend.getNoteReceives()) {
+                to.add(note.getAdmin().getName());
+            }
+            return NoteResponse.builder()
+                    .content(noteSend.getContent())
+                    .from(user.getName())
+                    .to(to)
+                    .title(noteSend.getTitle())
+                    .time(String.valueOf(noteSend.getCreateTime()))
+                    .build();
+        }
     }
 }
