@@ -47,7 +47,7 @@ public class NoteService {
 
     @Transactional
     //쪽지 저장 (발신)
-    public AfterNoteSendResponse registerNote(NoteSendRequest request, User user) throws JsonProcessingException {
+    public AfterNoteSendResponse registerNote(NoteSendRequest request, User user) {
         System.out.println("registerNote");
 
         String title = request.getTitle();
@@ -117,7 +117,7 @@ public class NoteService {
         for(NoteReceive receivedNote:receivedNotes) {
             NoteSend note = receivedNote.getNoteSend();
             ReceivedNoteResponse receivedNoteResponse = ReceivedNoteResponse.builder()
-                    .id(receivedNote.getNoteSend().getId())
+                    .id(note.getId())
                     .title(note.getTitle())
                     .content(note.getContent())
                     .isRead(receivedNote.getIsRead())
@@ -138,7 +138,7 @@ public class NoteService {
         for(NoteReceive trashNote : trashNotes) {
             NoteSend note = trashNote.getNoteSend();
             TrashNoteResponse trashNoteResponse = TrashNoteResponse.builder()
-                .id(trashNote.getId())
+                .id(note.getId())
                 .title(note.getTitle())
                 .content(note.getContent())
                 .from(note.getAdmin().getName())
@@ -152,7 +152,8 @@ public class NoteService {
     //수신쪽지 삭제 (휴지통 넣기)
     public List<ReceivedNoteResponse> deleteReceivedNotes (List<Long> noteIdsForDelete, User user) {
         for(Long noteId : noteIdsForDelete) {
-            NoteReceive noteReceive = noteReceiveRepository.findById(noteId).get();
+            NoteSend noteSend = noteSendRepository.findById(noteId).get();
+            NoteReceive noteReceive = noteReceiveRepository.findByUserAndNoteSend(user, noteSend);
             noteReceive.setIsDeleted(true);
             noteReceiveRepository.save(noteReceive);
         }
@@ -163,7 +164,8 @@ public class NoteService {
     //수신쪽지 완전삭제
     public List<TrashNoteResponse> realDeleteReceivedNotes (List<Long> noteIdsForDelete, User user) {
         for(Long noteId : noteIdsForDelete) {
-            NoteReceive noteReceive = noteReceiveRepository.findById(noteId).get();
+            NoteSend noteSend = noteSendRepository.findById(noteId).get();
+            NoteReceive noteReceive = noteReceiveRepository.findByUserAndNoteSend(user, noteSend);
             noteReceive.setIsRealDeleted(true);
             noteReceiveRepository.save(noteReceive);
         }
@@ -190,6 +192,7 @@ public class NoteService {
                 .content(noteSend.getContent())
                 .from(noteSend.getAdmin().getName())
                 .to(user.getName())
+                .title(noteSend.getTitle())
                 .time(String.valueOf(noteSend.getCreateTime()))
                 .build();
     }
