@@ -10,9 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class UserRequest {
-    private Long id;
-
     private String name;
-    private String password;
     private String phone;
 }

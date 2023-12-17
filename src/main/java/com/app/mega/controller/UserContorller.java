@@ -1,5 +1,6 @@
 package com.app.mega.controller;
 
+import com.app.mega.common.CommonResponse;
 import com.app.mega.dto.request.user.PasswordRequest;
 import com.app.mega.dto.request.user.UserRequest;
 import com.app.mega.dto.response.user.UserResponse;
@@ -7,6 +8,8 @@ import com.app.mega.entity.User;
 import com.app.mega.service.jpa.AuthenticationService;
 import com.app.mega.service.jpa.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +36,16 @@ public class UserContorller {
 
     //User Password Update
     @PutMapping("/updatePassword")
-    public void updateUserPassword(@AuthenticationPrincipal User user, @RequestBody PasswordRequest request) throws Exception {
+    public ResponseEntity updateUserPassword(@AuthenticationPrincipal User user, @RequestBody PasswordRequest request) throws Exception {
         if(userService.isCorrectPassword(user, request)) {
-            authenticationService.resetPassword(user.getId(), request.getEditPassword());
+            return userService.updateUserPassword(user, request.getEditPassword());
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    CommonResponse.builder()
+                            .responseCode(-1)
+                            .responseMessage("[실패] 기존 비밀번호 불일치")
+                            .data(null)
+                            .build());
         }
     }
 

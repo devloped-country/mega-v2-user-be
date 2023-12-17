@@ -29,10 +29,10 @@ public class NoteController {
 
     //발신시 쪽지 저장
     @PostMapping("/register")
-    public void registerNote (@RequestBody NoteSendRequest request, @AuthenticationPrincipal User user) throws Exception {
+    public AfterNoteSendResponse registerNote (@RequestBody NoteSendRequest request, @AuthenticationPrincipal User user) throws Exception {
         System.out.println("registerNote");
         System.out.println(request);
-        noteService.registerNote(request, user);
+        return noteService.registerNote(request, user);
     }
 
     //수신쪽지함 불러오기
