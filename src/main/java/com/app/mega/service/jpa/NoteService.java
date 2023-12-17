@@ -5,10 +5,7 @@ import com.app.mega.dto.request.note.NoteSendRequest;
 import com.app.mega.dto.response.note.*;
 import com.app.mega.entity.*;
 import com.app.mega.repository.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +21,6 @@ public class NoteService {
     private final NoteSendRepository noteSendRepository;
     private final NoteReceiveRepository noteReceiveRepository;
     private final AdminRepository adminRepository;
-    private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional
     //교육기관에 해당하는 매니저 불러오기
