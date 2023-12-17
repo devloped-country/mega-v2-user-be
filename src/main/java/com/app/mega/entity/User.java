@@ -39,10 +39,6 @@ public class User implements UserDetails {
   private String phone;
 
   @NotNull
-  @Column(length = 500)
-  private String imageUrl;
-
-  @NotNull
   @ColumnDefault("0")
   @Column(columnDefinition = "TINYINT(1)")
   private Boolean isIdentified;
