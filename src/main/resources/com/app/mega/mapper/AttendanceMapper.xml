@@ -5,11 +5,36 @@
 <mapper namespace="com.app.mega.mapper.AttendanceMapper">
 
 
+    <select id="getAttendanceListByUserIdAndMonth" resultType="com.app.mega.dto.response.AttendanceResponse">
+        SELECT
+            id,
+            DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s') AS start_time,
+            DATE_FORMAT(end_time, '%Y-%m-%d %H:%i:%s') AS end_time,
+            status,
+            DATE_FORMAT(attendance_date, '%Y-%m-%d') AS attendance_date
+        FROM attendance
+        WHERE user_id = #{userId}
+                  AND MONTH(attendance_date) = #{month}
+    </select>
 
+<!--    <select id="getUserListById" resultType="com.app.mega.dto.response.UserResponse">-->
+<!--        SELECT id, name, email, password, phone, is_identified FROM user WHERE id = #{id}-->
+<!--    </select>-->
+
+    <select id="getAttendanceListByUserId" resultType="com.app.mega.dto.response.AttendanceResponse">
+        SELECT
+            id
+             ,DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s')
+             ,DATE_FORMAT(end_time, '%Y-%m-%d %H:%i:%s')
+             ,status
+             ,DATE_FORMAT(attendance_date, '%Y-%m-%d')
+        FROM attendance
+        WHERE user_id = #{userId}
+    </select>
 
 
     <select id="getAppliancesById" resultType="com.app.mega.dto.response.appliance.ApplianceResponse" parameterType="long">
-        SELECT status,attendance_id,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time, user_id, reason
+        SELECT status,attendance_id,`time`, user_id, reason, status_change_allow
         FROM appliance
         WHERE user_id = #{id}
     </select>
@@ -20,9 +45,12 @@
         WHERE user_id = #{id} AND DATE(attendance_date) = #{date}
     </select>
 
+<!--    <insert id="createApplianceForAttendance" useGeneratedKeys="false">-->
+<!--        INSERT INTO appliance (user_id,reason,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time,status,attendance_id)-->
+<!--        VALUES (#{id},#{applianceRequest.reason},#{applianceRequest.applianceDate},#{applianceRequest.status},#{attendanceId})-->
+<!--    </insert>-->
     <insert id="createApplianceForAttendance" useGeneratedKeys="false">
-        INSERT INTO appliance (user_id,reason,DATE_FORMAT(FROM_UNIXTIME(`time`), '%Y-%m-%d')AS time,status,attendance_id)
-        VALUES (#{id},#{applianceRequest.reason},#{applianceRequest.applianceDate},#{applianceRequest.status},#{attendanceId})
+        INSERT INTO appliance (user_id, reason, time, status, attendance_id)
+        VALUES (#{id}, #{applianceRequest.reason}, #{applianceRequest.applianceDate}, #{applianceRequest.status}, #{attendanceId})
     </insert>
-
 </mapper>

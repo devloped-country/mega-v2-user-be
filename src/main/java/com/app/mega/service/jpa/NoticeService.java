@@ -3,8 +3,10 @@ package com.app.mega.service.jpa;
 import com.app.mega.dto.request.notice.NoticeRequest;
 import com.app.mega.dto.request.notice.NoticeTagsRequest;
 import com.app.mega.dto.response.notice.NoticeResponse;
+import com.app.mega.dto.response.notice.NoticeTagResponse;
 import com.app.mega.entity.Notice;
 import com.app.mega.entity.NoticeTag;
+import com.app.mega.entity.User;
 import com.app.mega.repository.NoticeRepository;
 import com.app.mega.repository.NoticeTagRepository;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,16 @@ public class NoticeService {
 
     Page<Notice> result = noticeRepository.findAll(pageable);
     System.out.println(result);
+  }
+
+  @Transactional
+  public List<NoticeResponse> findNotices(User user) {
+    return noticeRepository.findAllByCourseId(user.getCourse().getId()).stream().map(
+        notice -> new NoticeResponse(notice.getId(), notice.getTitle(), notice.getContent(),
+            notice.getAuthor(), notice.getNoticeTags().stream()
+            .map(tag -> new NoticeTagResponse(tag.getId(), tag.getTag())).toList(),
+            notice.getCreatedTime(),
+            notice.getTextContent(), notice.getThumbnail())).toList();
   }
 
 
