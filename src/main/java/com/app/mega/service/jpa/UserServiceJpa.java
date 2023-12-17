@@ -23,9 +23,9 @@ public class UserServiceJpa {
         Float latitude = institution.getLatitude();
         Float longitude = institution.getLongitude();
 
-        return ((latitude - 0.001) < locationRequest.getLatitude() && locationRequest.getLatitude() < (
-            latitude + 0.001)) && ((longitude - 0.001) < locationRequest.getLongitude()
-            && locationRequest.getLongitude() < (longitude + 0.001));
+        return ((latitude - 0.005) < locationRequest.getLatitude() && locationRequest.getLatitude() < (
+            latitude + 0.005)) && ((longitude - 0.005) < locationRequest.getLongitude()
+            && locationRequest.getLongitude() < (longitude + 0.005));
       }
     }
 
